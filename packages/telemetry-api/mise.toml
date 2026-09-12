@@ -1,0 +1,11 @@
+[tools]
+go = "1.27.1"
+"go:github.com/air-verse/air" = "latest"
+
+[tasks.dev]
+description = "Start the hot-reloading dev server"
+run = "air"
+
+[tasks."generate:openapi"]
+description = "Generate the OpenAPI spec"
+run = "mkdir -p doc && go run . openapi > doc/openapi.yaml"
