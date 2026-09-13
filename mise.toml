@@ -1,0 +1,5 @@
+[tools]
+mprocs = "latest"
+
+[tasks.dev]
+description = "mprocs"
