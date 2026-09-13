@@ -1,17 +1,30 @@
 {
   "name": "telemetry-dashboard",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "openapi-ts": "openapi-ts",
+    "typecheck": "nuxt typecheck --checker=golar"
   },
   "dependencies": {
+    "@tanstack/vue-query": "^5.101.0",
+    "@tanstack/vue-query-devtools": "^6.1.48",
+    "ky": "^2.1.0",
     "nuxt": "^4.5.2",
     "vue": "^3.5.42",
-    "vue-router": "^5.3.1"
+    "vue-router": "^5.3.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@golar/vue": "^0.1.10",
+    "@hey-api/openapi-ts": "^0.99.0",
+    "@hey-api/vite-plugin": "^0.3.2",
+    "golar": "^0.1.10",
+    "typescript": "^6.0.3"
   }
 }
