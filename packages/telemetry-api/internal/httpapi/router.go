@@ -19,6 +19,7 @@ func NewRouter(cfg config.Config, store telemetry.Store) (http.Handler, huma.API
 	gin.SetMode(gin.ReleaseMode)
 	ginRouter := gin.New()
 	ginRouter.Use(gin.Recovery())
+	ginRouter.Use(corsMiddleware(cfg.AllowedOrigin))
 
 	ginRouter.GET("/health", health)
 
@@ -48,4 +49,20 @@ func NewRouter(cfg config.Config, store telemetry.Store) (http.Handler, huma.API
 	}, createFetchEventsHandler(store))
 
 	return ginRouter, api
+}
+
+func corsMiddleware(allowedOrigin string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, X-Api-Key")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
 }
