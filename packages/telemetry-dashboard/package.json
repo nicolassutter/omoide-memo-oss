@@ -9,13 +9,26 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "openapi-ts": "openapi-ts",
-    "typecheck": "nuxt typecheck --checker=golar"
+    "typecheck": "nuxt typecheck --checker=golar",
+    "seed": "tsx seed.ts",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
   },
   "dependencies": {
+    "@lucide/vue": "^1.45.0",
     "@tanstack/vue-query": "^5.101.0",
-    "@tanstack/vue-query-devtools": "^6.1.48",
+    "@unovis/ts": "^1.7.0",
+    "@unovis/vue": "^1.7.0",
+    "@vueuse/core": "^14.4.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "ky": "^2.1.0",
+    "lucide-vue-next": "^1.0.0",
     "nuxt": "^4.5.2",
+    "reka-ui": "^2.10.4",
+    "tailwind-merge": "^3.6.0",
     "vue": "^3.5.42",
     "vue-router": "^5.3.1",
     "zod": "^4.4.3"
@@ -24,7 +37,16 @@
     "@golar/vue": "^0.1.10",
     "@hey-api/openapi-ts": "^0.99.0",
     "@hey-api/vite-plugin": "^0.3.2",
+    "@nuxtjs/color-mode": "^4.0.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "@tanstack/vue-query-devtools": "^6.1.48",
+    "@vue/devtools-api": "^8.2.1",
     "golar": "^0.1.10",
+    "oxfmt": "^0.67.0",
+    "oxlint": "^1.82.0",
+    "shadcn-nuxt": "^2.8.2",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.13",
     "typescript": "^6.0.3"
   }
 }
