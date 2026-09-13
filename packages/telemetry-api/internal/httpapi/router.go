@@ -37,5 +37,15 @@ func NewRouter(cfg config.Config, store telemetry.Store) (http.Handler, huma.API
 		Tags:          []string{"telemetry"},
 	}, createIngestHandler(store))
 
+	huma.Register(api, huma.Operation{
+		OperationID:   "fetch-events",
+		Method:        http.MethodGet,
+		Path:          "/v1/events",
+		Summary:       "Fetch telemetry events",
+		Description:   "Retrieves events filtered by a trackedAt time interval. Defaults to the last 30 days.",
+		DefaultStatus: http.StatusOK,
+		Tags:          []string{"telemetry"},
+	}, createFetchEventsHandler(store))
+
 	return ginRouter, api
 }

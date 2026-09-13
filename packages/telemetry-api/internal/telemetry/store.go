@@ -9,6 +9,7 @@ import (
 
 type Store interface {
 	Insert(ctx context.Context, events []Event) error
+	Find(ctx context.Context, startTime time.Time, endTime time.Time) ([]Event, error)
 }
 
 type GORMStore struct {
@@ -30,4 +31,13 @@ func (s *GORMStore) Insert(ctx context.Context, events []Event) error {
 		}
 	}
 	return s.db.WithContext(ctx).Create(&events).Error
+}
+
+func (store *GORMStore) Find(ctx context.Context, startTime time.Time, endTime time.Time) ([]Event, error) {
+	var events []Event
+	databaseError := store.db.WithContext(ctx).
+		Where("tracked_at >= ? AND tracked_at <= ?", startTime, endTime).
+		Order("tracked_at DESC").
+		Find(&events).Error
+	return events, databaseError
 }
