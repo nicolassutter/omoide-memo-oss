@@ -1,0 +1,5 @@
+procs:
+  api:
+    shell: "cd packages/telemetry-api && mise run dev"
+  dashboard:
+    shell: "cd packages/telemetry-dashboard && pnpm run dev"
