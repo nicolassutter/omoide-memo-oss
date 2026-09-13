@@ -5,7 +5,7 @@ import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 <template>
   <div>
     <NuxtRouteAnnouncer />
-    <NuxtWelcome />
+    <NuxtPage />
     <VueQueryDevtools />
   </div>
 </template>
