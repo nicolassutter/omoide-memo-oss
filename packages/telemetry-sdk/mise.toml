@@ -1,0 +1,6 @@
+[tasks."generate:openapi"]
+description = "Generate the OpenAPI spec and sdk"
+run =  [
+  "cd ../telemetry-api && mise run generate:openapi",
+  "pnpm run openapi-ts",
+]

@@ -2,4 +2,7 @@
 mprocs = "latest"
 
 [tasks.dev]
-description = "mprocs"
+run = [
+  "cd packages/telemetry-sdk && mise run generate:openapi",
+  "mprocs"
+]
