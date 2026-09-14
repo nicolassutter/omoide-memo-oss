@@ -1,0 +1,33 @@
+{
+  "name": "@omoide-memo-oss/telemetry-sdk",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "types": "./index.ts",
+  "scripts": {
+    "openapi-ts": "openapi-ts"
+  },
+  "exports": {
+    ".": "./index.ts",
+    "./config": "./openapi-ts.config.ts",
+    "./vite-plugin": "./vite-plugin.ts"
+  },
+  "peerDependencies": {
+    "@tanstack/vue-query": ">=5.0.0",
+    "ky": ">=2.0.0",
+    "zod": ">=4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/vue-query": {
+      "optional": true
+    },
+    "zod": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "^0.99.0",
+    "@hey-api/vite-plugin": "^0.3.2",
+    "typescript": "^6.0.3"
+  }
+}

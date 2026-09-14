@@ -1,5 +1,5 @@
 import tailwindcss from '@tailwindcss/vite'
-import { heyApiPlugin } from '@hey-api/vite-plugin'
+import { vitePlugin as telemetrySdkVitePlugin } from '@omoide-memo-oss/telemetry-sdk/vite-plugin'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -33,13 +33,6 @@ export default defineNuxtConfig({
     },
   },
   vite: {
-    plugins: [
-      tailwindcss(),
-      heyApiPlugin({
-        vite: {
-          apply: 'serve',
-        },
-      }),
-    ],
+    plugins: [tailwindcss(), telemetrySdkVitePlugin()],
   },
 })

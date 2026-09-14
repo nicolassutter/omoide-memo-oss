@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Event as TelemetryEvent } from '~/lib/client/types.gen'
+import type { Event as TelemetryEvent } from '@omoide-memo-oss/telemetry-sdk'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card'
 import { Activity } from '@lucide/vue'
 import { VisXYContainer, VisArea, VisAxis } from '@unovis/vue'

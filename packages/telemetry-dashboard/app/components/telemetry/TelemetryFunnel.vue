@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, watchEffect } from 'vue'
-import type { Event as TelemetryEvent } from '~/lib/client/types.gen'
+import type { Event as TelemetryEvent } from '@omoide-memo-oss/telemetry-sdk'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card'
 import {
   Select,

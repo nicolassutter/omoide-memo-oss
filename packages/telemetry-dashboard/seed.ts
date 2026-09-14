@@ -1,7 +1,5 @@
 import { randomUUID } from 'crypto'
-import { client } from './app/lib/client/client.gen'
-import { ingestEvents } from './app/lib/client/sdk.gen'
-import type { IngestBatch, IngestEvent } from './app/lib/client/types.gen'
+import { client, ingestEvents, type IngestBatch, type IngestEvent } from '@omoide-memo-oss/telemetry-sdk'
 
 const API_KEY = process.env.TELEMETRY_API_KEY || 'your-api-key-here'
 

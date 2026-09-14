@@ -1,4 +1,4 @@
-import { client } from '~/lib/client/client.gen'
+import { client } from '@omoide-memo-oss/telemetry-sdk'
 import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
 import ky from 'ky'
 
