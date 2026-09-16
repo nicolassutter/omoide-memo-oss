@@ -4,3 +4,6 @@ run =  [
   "cd ../telemetry-api && mise run generate:openapi",
   "pnpm run openapi-ts",
 ]
+# setup caching so generation only happens as needed
+sources = [ "./**", "!./node_modules/**", "!./src/**" ]
+outputs = [ "src/**" ]
