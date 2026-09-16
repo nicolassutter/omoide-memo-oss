@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { useQuery } from '@tanstack/vue-query'
-import { fetchEvents, type Event as TelemetryEvent } from '@omoide-memo-oss/telemetry-sdk'
+import { fetchEvents, type Event as TelemetryEvent } from '@/lib/telemetry-sdk'
 
 function getStartTimeForDays(daysString: string) {
   const days = parseInt(daysString, 10)

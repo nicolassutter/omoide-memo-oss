@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Event as TelemetryEvent } from '@omoide-memo-oss/telemetry-sdk'
+import type { Event as TelemetryEvent } from '@/lib/telemetry-sdk'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card'
 import { BarChart3 } from '@lucide/vue'
 

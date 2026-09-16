@@ -2,8 +2,8 @@
 description = "Generate the OpenAPI spec and sdk"
 run =  [
   "cd ../telemetry-api && mise run generate:openapi",
-  "pnpm run openapi-ts",
+  "bun ./tools/generate-openapi.ts",
 ]
 # setup caching so generation only happens as needed
-sources = [ "./**", "!./node_modules/**", "!./src/**" ]
-outputs = [ "src/**" ]
+sources = [ "../telemetry-api/doc/openapi.yaml" ]
+outputs = [ "app/lib/telemetry-sdk/**" ]

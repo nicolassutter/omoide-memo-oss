@@ -8,11 +8,10 @@
     "openapi-ts": "openapi-ts"
   },
   "exports": {
-    ".": "./index.ts",
-    "./config": "./openapi-ts.config.ts",
-    "./vite-plugin": "./vite-plugin.ts"
+    ".": "./index.ts"
   },
   "peerDependencies": {
+    "@hey-api/openapi-ts": "^0.99.0",
     "@tanstack/vue-query": ">=5.0.0",
     "ky": ">=2.0.0",
     "zod": ">=4.0.0"
@@ -26,8 +25,6 @@
     }
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "^0.99.0",
-    "@hey-api/vite-plugin": "^0.3.2",
     "typescript": "^6.0.3"
   }
 }

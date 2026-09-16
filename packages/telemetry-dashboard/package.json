@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@golar/vue": "^0.1.10",
+    "@hey-api/openapi-ts": "^0.99.0",
     "@nuxtjs/color-mode": "^4.0.1",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/vue-query-devtools": "^6.1.48",

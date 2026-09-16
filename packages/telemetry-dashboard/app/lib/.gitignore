@@ -1,0 +1,2 @@
+telemetry-sdk/*
+!telemetry-sdk/.gitkeep
