@@ -1,16 +1,21 @@
 import { type UserConfig, createClient } from '@hey-api/openapi-ts'
 
+export type ClientType = 'ky' | 'fetch'
+
 export type Config = {
   spec: string
   output: string
+  client?: ClientType
 }
 
 export async function createSdk(config: Config) {
+  const clientPlugin = config.client === 'fetch' ? '@hey-api/client-fetch' : '@hey-api/client-ky'
+
   const userConfig: UserConfig = {
     input: config.spec,
     output: config.output,
     plugins: [
-      '@hey-api/client-ky',
+      clientPlugin,
       {
         name: '@hey-api/sdk',
         operations: {

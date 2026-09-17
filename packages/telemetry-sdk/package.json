@@ -4,11 +4,14 @@
   "private": true,
   "type": "module",
   "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
   "scripts": {
     "openapi-ts": "openapi-ts"
   },
-  "exports": {
-    ".": "./index.ts"
+  "devDependencies": {
+    "typescript": "^6.0.3"
   },
   "peerDependencies": {
     "@hey-api/openapi-ts": "^0.99.0",
@@ -20,11 +23,11 @@
     "@tanstack/vue-query": {
       "optional": true
     },
+    "ky": {
+      "optional": true
+    },
     "zod": {
       "optional": true
     }
-  },
-  "devDependencies": {
-    "typescript": "^6.0.3"
   }
 }
