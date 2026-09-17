@@ -9,3 +9,7 @@ run = "air"
 [tasks."generate:openapi"]
 description = "Generate the OpenAPI spec"
 run = "mkdir -p doc && go run . openapi > doc/openapi.yaml"
+
+[tasks.test]
+description = "Run HTTP integration tests (requires Docker)"
+run = "go test ./..."
