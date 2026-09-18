@@ -1,9 +1,12 @@
+[tools]
+node = "26"
+pnpm = "12"
+
 [tasks."generate:openapi"]
 description = "Generate the OpenAPI spec and sdk"
-run =  [
+run = [
   "cd ../telemetry-api && mise run generate:openapi",
   "bun ./tools/generate-openapi.ts",
 ]
-# setup caching so generation only happens as needed
-sources = [ "../telemetry-api/doc/openapi.yaml" ]
-outputs = [ "app/lib/telemetry-sdk/**" ]
+sources = ["../telemetry-api/doc/openapi.yaml"]
+outputs = ["app/lib/telemetry-sdk/**"]

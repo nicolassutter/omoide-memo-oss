@@ -1,0 +1,90 @@
+services:
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy:ci-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      - CADDY_INGRESS_NETWORKS=caddy
+    networks:
+      - caddy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - caddy_data:/data
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - caddy
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  telemetry-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api-runtime
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+      - TELEMETRY_API_KEY=${TELEMETRY_API_KEY}
+      - PORT=9999
+      - ALLOWED_ORIGIN=*
+    networks:
+      - caddy
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - wget --no-verbose --tries=1 --spider http://localhost:9999/health || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    labels:
+      caddy: ""
+      caddy.route: /api/*
+      caddy.route.0_uri: strip_prefix /api
+      caddy.route.1_reverse_proxy: "{{upstreams 9999}}"
+
+  telemetry-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dashboard-runtime
+    restart: unless-stopped
+    environment:
+      - NUXT_TELEMETRY_API_KEY=${TELEMETRY_API_KEY}
+      - PORT=3000
+      - HOST=0.0.0.0
+      - NODE_ENV=production
+    networks:
+      - caddy
+    depends_on:
+      - telemetry-api
+    labels:
+      caddy: ""
+      caddy.route: /*
+      caddy.route.reverse_proxy: "{{upstreams 3000}}"
+
+networks:
+  caddy:
+    name: caddy
+
+volumes:
+  caddy_data:
+  postgres_data:

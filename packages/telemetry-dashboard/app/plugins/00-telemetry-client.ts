@@ -1,11 +1,11 @@
 import { client } from '@/lib/telemetry-sdk'
-import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
+import { defineNuxtPlugin } from '#imports'
 import ky from 'ky'
 
-export default defineNuxtPlugin(() => {
-  const runtimeConfiguration = useRuntimeConfig()
-  const telemetryServerBaseUrl = runtimeConfiguration.public.telemetryServerBaseUrl
-  const telemetryApiKey = runtimeConfiguration.public.telemetryApiKey
+export default defineNuxtPlugin(async () => {
+  const { apiBaseUrl, apiKey } = await $fetch<{ apiBaseUrl: string; apiKey: string }>(
+    '/bff/_telemetry-config',
+  )
 
   const instance = ky.create({
     hooks: {
@@ -18,9 +18,9 @@ export default defineNuxtPlugin(() => {
   })
 
   client.setConfig({
-    baseUrl: telemetryServerBaseUrl,
+    baseUrl: apiBaseUrl,
     headers: {
-      'X-Api-Key': telemetryApiKey,
+      'X-Api-Key': apiKey,
     },
     ky: instance,
   })

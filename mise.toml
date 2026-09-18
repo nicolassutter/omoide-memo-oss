@@ -2,7 +2,9 @@
 mprocs = "latest"
 
 [tasks.dev]
+description = "Generate SDK then start api + dashboard concurrently"
 run = [
-  "cd packages/telemetry-sdk && mise run generate:openapi",
-  "mprocs"
+  "cd packages/telemetry-api && mise run generate:openapi",
+  "cd packages/telemetry-dashboard && pnpm run generate:openapi",
+  "mprocs",
 ]
