@@ -25,16 +25,16 @@ func createIngestHandler(s telemetry.Store) func(context.Context, *IngestInput) 
 		batch := input.Body
 		now := time.Now().UTC()
 		events := make([]telemetry.Event, len(batch.Events))
-		for i, e := range batch.Events {
-			props := e.Props
+		for i, event := range batch.Events {
+			props := event.Props
 			if len(props) == 0 {
 				props = []byte("{}")
 			}
 			events[i] = telemetry.Event{
 				DeviceID:    batch.DeviceID,
-				Name:        e.Name,
+				Name:        event.Name,
 				Props:       datatypes.JSON(props),
-				TrackedAt:   e.TrackedTime(),
+				TrackedAt:   event.TrackedTime(),
 				ReceivedAt:  now,
 				BatchSentAt: batch.SentAt.UTC(),
 			}
@@ -43,8 +43,8 @@ func createIngestHandler(s telemetry.Store) func(context.Context, *IngestInput) 
 			return nil, huma.Error500InternalServerError("database error", err)
 		}
 
-		out := &IngestOutput{}
-		out.Body.Accepted = len(events)
-		return out, nil
+		output := &IngestOutput{}
+		output.Body.Accepted = len(events)
+		return output, nil
 	}
 }

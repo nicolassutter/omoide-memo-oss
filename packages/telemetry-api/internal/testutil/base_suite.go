@@ -18,7 +18,8 @@ import (
 )
 
 const (
-	testAPIKey           = "test-api-key"
+	testPublicAPIKey     = "test-public-api-key"
+	testAdminAPIKey      = "test-admin-api-key"
 	postgresImage        = "postgres:16-alpine"
 	containerBootTimeout = 60 * time.Second
 	containerStopTimeout = 30 * time.Second
@@ -26,10 +27,11 @@ const (
 
 type BaseSuite struct {
 	suite.Suite
-	Client    *resty.Client
-	ServerURL string
-	Store     telemetry.Store
-	DB        *gorm.DB
+	PublicClient *resty.Client
+	AdminClient  *resty.Client
+	ServerURL    string
+	Store        telemetry.Store
+	DB           *gorm.DB
 
 	server    *httptest.Server
 	container *postgres.PostgresContainer
@@ -52,14 +54,22 @@ func (s *BaseSuite) SetupSuite() {
 	s.DB = db
 	s.Store = telemetry.NewStore(db)
 
-	cfg := config.Config{APIKey: testAPIKey, AllowedOrigin: "*"}
+	cfg := config.Config{
+		PublicAPIKey:  testPublicAPIKey,
+		AdminAPIKey:   testAdminAPIKey,
+		AllowedOrigin: "*",
+	}
 	handler, _ := httpapi.NewRouter(cfg, s.Store)
 	s.server = httptest.NewServer(handler)
 	s.ServerURL = s.server.URL
 
-	s.Client = resty.New().
+	s.PublicClient = resty.New().
 		SetBaseURL(s.server.URL).
-		SetHeader("X-Api-Key", testAPIKey)
+		SetHeader("X-Api-Public-Key", testPublicAPIKey)
+
+	s.AdminClient = resty.New().
+		SetBaseURL(s.server.URL).
+		SetHeader("X-Admin-Api-Key", testAdminAPIKey)
 }
 
 func (s *BaseSuite) Reset() {

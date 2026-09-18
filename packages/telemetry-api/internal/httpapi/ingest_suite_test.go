@@ -36,16 +36,16 @@ func (s *IngestSuite) TestIngestAcceptsValidBatch() {
 		},
 	}
 
-	var out struct {
+	var output struct {
 		Accepted int `json:"accepted"`
 	}
-	resp, err := s.Client.R().
+	response, err := s.PublicClient.R().
 		SetBody(batch).
-		SetResult(&out).
+		SetResult(&output).
 		Post("/v1/events")
 	s.Require().NoError(err)
-	s.Require().Equal(http.StatusAccepted, resp.StatusCode())
-	s.Require().Equal(2, out.Accepted)
+	s.Require().Equal(http.StatusAccepted, response.StatusCode())
+	s.Require().Equal(2, output.Accepted)
 
 	var stored []telemetry.Event
 	s.Require().NoError(s.DB.Order("id").Find(&stored).Error)
@@ -65,7 +65,7 @@ func (s *IngestSuite) TestIngestRejectsUnknownEvent() {
 		},
 	}
 
-	resp, err := s.Client.R().SetBody(batch).Post("/v1/events")
+	response, err := s.PublicClient.R().SetBody(batch).Post("/v1/events")
 	s.Require().NoError(err)
-	s.Require().Equal(http.StatusUnprocessableEntity, resp.StatusCode())
+	s.Require().Equal(http.StatusUnprocessableEntity, response.StatusCode())
 }

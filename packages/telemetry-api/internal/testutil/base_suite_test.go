@@ -22,12 +22,12 @@ func TestHarnessSmokeSuite(t *testing.T) {
 }
 
 func (s *HarnessSmokeSuite) TestHarnessIsWired() {
-	resp, err := s.Client.R().Get("/health")
+	response, err := s.PublicClient.R().Get("/health")
 	s.Require().NoError(err)
-	s.Require().Equal(http.StatusOK, resp.StatusCode())
+	s.Require().Equal(http.StatusOK, response.StatusCode())
 
 	var decoded map[string]string
-	s.Require().NoError(json.Unmarshal(resp.Bytes(), &decoded))
+	s.Require().NoError(json.Unmarshal(response.Bytes(), &decoded))
 	s.Require().Equal("ok", decoded["status"])
 }
 

@@ -1,12 +1,12 @@
 import { randomUUID } from 'crypto'
 import { client, ingestEvents, type IngestBatch, type IngestEvent } from '@/lib/telemetry-sdk'
 
-const API_KEY = process.env.TELEMETRY_API_KEY || 'your-api-key-here'
+const API_KEY = process.env.TELEMETRY_ADMIN_API_KEY || 'your-admin-api-key-here'
 
 client.setConfig({
   baseUrl: 'http://localhost:9999',
   headers: {
-    'X-Api-Key': API_KEY,
+    'X-Admin-Api-Key': API_KEY,
   },
 })
 

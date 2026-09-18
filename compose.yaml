@@ -1,16 +1,32 @@
 services:
-  caddy:
-    image: lucaslorentz/caddy-docker-proxy:ci-alpine
+  tailscale:
+    image: tailscale/tailscale:latest
     restart: unless-stopped
-    ports:
-      - "80:80"
+    hostname: omoide-oss-caddy
     environment:
-      - CADDY_INGRESS_NETWORKS=caddy
-    networks:
-      - caddy
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - tailscale_state:/var/lib/tailscale
+    cap_add:
+      - net_admin
+      - net_raw
+
+  # tailscale handles its traffic
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    network_mode: "service:tailscale"
+    depends_on:
+      - tailscale
+    environment:
+      - API_PROXY_URL=${API_PROXY_URL:-http://telemetry-api:9999}
+      - TELEMETRY_ADMIN_API_KEY=${TELEMETRY_ADMIN_API_KEY}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   postgres:
     image: postgres:16-alpine
@@ -21,8 +37,6 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - caddy
     healthcheck:
       test:
         - CMD-SHELL
@@ -31,19 +45,22 @@ services:
       timeout: 5s
       retries: 10
 
+  # served from outside hence the exposed port
   telemetry-api:
+    image: ${IMAGE_PREFIX:-}telemetry-api:latest
     build:
       context: .
       dockerfile: Dockerfile
       target: api-runtime
     restart: unless-stopped
+    ports:
+      - "9999:9999"
     environment:
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
-      - TELEMETRY_API_KEY=${TELEMETRY_API_KEY}
+      - TELEMETRY_PUBLIC_API_KEY=${TELEMETRY_PUBLIC_API_KEY}
+      - TELEMETRY_ADMIN_API_KEY=${TELEMETRY_ADMIN_API_KEY}
       - PORT=9999
-      - ALLOWED_ORIGIN=*
-    networks:
-      - caddy
+      - ALLOWED_ORIGIN=${ALLOWED_ORIGIN:-*}
     depends_on:
       postgres:
         condition: service_healthy
@@ -55,36 +72,32 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-    labels:
-      caddy: ""
-      caddy.route: /api/*
-      caddy.route.0_uri: strip_prefix /api
-      caddy.route.1_reverse_proxy: "{{upstreams 9999}}"
 
+  # served by caddy, check Caddyfile
   telemetry-dashboard:
+    image: ${IMAGE_PREFIX:-}telemetry-dashboard:latest
     build:
       context: .
       dockerfile: Dockerfile
       target: dashboard-runtime
     restart: unless-stopped
     environment:
-      - NUXT_TELEMETRY_API_KEY=${TELEMETRY_API_KEY}
       - PORT=3000
       - HOST=0.0.0.0
       - NODE_ENV=production
-    networks:
-      - caddy
     depends_on:
-      - telemetry-api
-    labels:
-      caddy: ""
-      caddy.route: /*
-      caddy.route.reverse_proxy: "{{upstreams 3000}}"
-
-networks:
-  caddy:
-    name: caddy
+      telemetry-api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl -fsS http://localhost:3000/health || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 volumes:
   caddy_data:
   postgres_data:
+  tailscale_state:
