@@ -9,6 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "typecheck": "nuxt typecheck --checker=golar",
+    "generate:openapi": "tsx tools/generate-openapi.ts",
     "seed": "tsx seed.ts",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
