@@ -21,13 +21,13 @@ func TestEventsSuite(t *testing.T) {
 }
 
 func (s *EventsSuite) TestFetchEventsReturnsEmptyByDefault() {
-	var out struct {
+	var output struct {
 		Events []telemetry.Event `json:"events"`
 	}
-	resp, err := s.Client.R().SetResult(&out).Get("/v1/events")
+	response, err := s.AdminClient.R().SetResult(&output).Get("/v1/events")
 	s.Require().NoError(err)
-	s.Require().Equal(http.StatusOK, resp.StatusCode())
-	s.Require().Empty(out.Events)
+	s.Require().Equal(http.StatusOK, response.StatusCode())
+	s.Require().Empty(output.Events)
 }
 
 func (s *EventsSuite) TestFetchEventsReturnsInsertedEvents() {
@@ -57,15 +57,15 @@ func (s *EventsSuite) TestFetchEventsReturnsInsertedEvents() {
 	}
 	s.Require().NoError(s.Store.Insert(context.Background(), events))
 
-	var out struct {
+	var output struct {
 		Events []telemetry.Event `json:"events"`
 	}
-	resp, err := s.Client.R().SetResult(&out).Get("/v1/events")
+	response, err := s.AdminClient.R().SetResult(&output).Get("/v1/events")
 	s.Require().NoError(err)
-	s.Require().Equal(http.StatusOK, resp.StatusCode())
-	s.Require().Len(out.Events, 3)
+	s.Require().Equal(http.StatusOK, response.StatusCode())
+	s.Require().Len(output.Events, 3)
 
-	s.Require().True(out.Events[0].TrackedAt.After(out.Events[1].TrackedAt))
-	s.Require().True(out.Events[1].TrackedAt.After(out.Events[2].TrackedAt))
-	s.Require().Equal(testDeviceID, out.Events[0].DeviceID)
+	s.Require().True(output.Events[0].TrackedAt.After(output.Events[1].TrackedAt))
+	s.Require().True(output.Events[1].TrackedAt.After(output.Events[2].TrackedAt))
+	s.Require().Equal(testDeviceID, output.Events[0].DeviceID)
 }

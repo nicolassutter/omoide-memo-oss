@@ -26,6 +26,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("config: %v", err)
 	}
+	if cfg.DevMode {
+		log.Printf("WARNING: DEV_MODE=true — all auth middleware are disabled")
+	}
 	db, err := postgres.New(cfg.DatabaseURL)
 	if err != nil {
 		log.Fatalf("postgres: %v", err)

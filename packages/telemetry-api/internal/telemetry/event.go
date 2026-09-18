@@ -31,13 +31,13 @@ var EventValidators = map[string]func(json.RawMessage) error{
 	"onboarding_complete":      nil,
 	// track how the memo was created
 	"memo_created": func(props json.RawMessage) error {
-		var p struct {
+		var source struct {
 			Source string `json:"source"`
 		}
-		if err := json.Unmarshal(props, &p); err != nil {
+		if err := json.Unmarshal(props, &source); err != nil {
 			return fmt.Errorf("invalid JSON: %w", err)
 		}
-		if p.Source != "manual" && p.Source != "smart_scan" {
+		if source.Source != "manual" && source.Source != "smart_scan" {
 			return fmt.Errorf(`source must be "manual" or "smart_scan"`)
 		}
 		return nil
