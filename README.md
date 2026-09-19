@@ -11,9 +11,33 @@ Self-hosted telemetry stack. Go API, Nuxt dashboard, TypeScript SDK generation.
 ## Run with Docker (prod)
 
 Topology:
+
 - Caddy on `:80` is the only thing on the host's port 80. It forwards `/api/*` to `API_PROXY_TO` and reverse-proxies every other path to the dashboard.
 - The telemetry-api container publishes `9999:9999` directly on the host — it does not go through caddy.
 - Postgres is on the internal docker network only.
+
+```mermaid
+flowchart LR
+    subgraph Clients [Clients]
+        Browser([Browser])
+        MobileApp([Mobile app])
+    end
+
+    subgraph ComposeStack [Docker compose]
+        Caddy{{caddy :80<br/>exposed as a Tailscale service with `tailscale serve --service=svc:the-service-name 80`}}
+        TelemetryApi["telemetry-api<br/>:9999"]
+        TelemetryDashboard["telemetry-dashboard<br/>:3000"]
+        PostgresDb[("postgres<br/>:5432")]
+    end
+
+    Browser -->|"/* or /api/*"| Caddy
+    MobileApp -->|"POST /v1/events<br/>host:9999 with X-Api-Public-Key"| TelemetryApi
+
+    Caddy -->|"handle_path /api/*<br/>+ X-Admin-Api-Key"| TelemetryApi
+    Caddy -->|"/*"| TelemetryDashboard
+
+    TelemetryApi --> PostgresDb
+```
 
 ```
 # example, adapt to match prod env
@@ -35,6 +59,7 @@ mise run dev
 ```
 
 This:
+
 1. Generates the OpenAPI spec from the API source.
 2. Generates the SDK into the dashboard.
 3. Starts both processes under `mprocs` (API on `:9999`, dashboard on `:3000`).
