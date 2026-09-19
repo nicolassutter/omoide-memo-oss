@@ -20,7 +20,7 @@ services:
     depends_on:
       - tailscale
     environment:
-      - API_PROXY_URL=${API_PROXY_URL:-http://telemetry-api:9999}
+      - API_PROXY_TO=${API_PROXY_TO:-telemetry-api:9999}
       - TELEMETRY_ADMIN_API_KEY=${TELEMETRY_ADMIN_API_KEY}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
