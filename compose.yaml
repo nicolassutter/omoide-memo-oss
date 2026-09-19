@@ -25,8 +25,6 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
   postgres:
     image: postgres:16-alpine
@@ -48,15 +46,9 @@ services:
   # served from outside hence the exposed port
   telemetry-api:
     image: ${IMAGE_PREFIX:-}telemetry-api:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: api-runtime
-      args:
-        GO_VERSION: ${GO_VERSION:-1.27.1}
     restart: unless-stopped
     ports:
-      - "9999:9999"
+      - "${TELEMETRY_API_HOST_PORT:-9999}:9999"
     environment:
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
       - TELEMETRY_PUBLIC_API_KEY=${TELEMETRY_PUBLIC_API_KEY}
@@ -78,14 +70,6 @@ services:
   # served by caddy, check Caddyfile
   telemetry-dashboard:
     image: ${IMAGE_PREFIX:-}telemetry-dashboard:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: dashboard-runtime
-      args:
-        GO_VERSION: ${GO_VERSION:-1.27.1}
-        NODE_VERSION: ${NODE_VERSION:-26}
-        PNPM_VERSION: ${PNPM_VERSION:-12}
     restart: unless-stopped
     environment:
       - PORT=3000

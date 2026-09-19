@@ -8,3 +8,10 @@ run = [
   "cd packages/telemetry-dashboard && pnpm run generate:openapi",
   "mprocs",
 ]
+
+[tasks.build-images]
+description = "Build telemetry-api and telemetry-dashboard images for compose"
+run = [
+  "docker build --target api-runtime --build-arg GO_VERSION=${GO_VERSION:-1.27.1} -t telemetry-api:latest .",
+  "docker build --target dashboard-runtime --build-arg GO_VERSION=${GO_VERSION:-1.27.1} --build-arg NODE_VERSION=${NODE_VERSION:-26} --build-arg PNPM_VERSION=${PNPM_VERSION:-12} -t telemetry-dashboard:latest .",
+]

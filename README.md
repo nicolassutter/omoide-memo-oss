@@ -52,6 +52,6 @@ Generates sample data to start using the dashboard.
 
 ## How the dashboard authenticates (prod only)
 
-In prod the dashboard handles every path except `/api/*` (which caddy forwards to the API). Its own API calls go to `/api/*`, which caddy forwards to `API_PROXY_URL` (default `http://host.docker.internal:9999`) and adds `X-Admin-Api-Key: ${TELEMETRY_ADMIN_API_KEY}` from the caddy container before forwarding (see `Caddyfile`). The browser never sees or holds the admin key — it only sees the same-origin request to `/api/*`.
+In prod the dashboard handles every path except `/api/*` (which caddy forwards to the API). Its own API calls go to `/api/*`, which caddy forwards to `API_PROXY_URL` (default `http://telemetry-api:9999`) and adds `X-Admin-Api-Key: ${TELEMETRY_ADMIN_API_KEY}` from the caddy container before forwarding (see `Caddyfile`). The browser never sees or holds the admin key — it only sees the same-origin request to `/api/*`.
 
 In dev (`mise run dev`) there is no caddy and no header injection. The dashboard plugin uses `import.meta.env.DEV` to point its `baseUrl` straight at `http://localhost:9999`.
