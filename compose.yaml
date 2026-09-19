@@ -52,6 +52,8 @@ services:
       context: .
       dockerfile: Dockerfile
       target: api-runtime
+      args:
+        GO_VERSION: ${GO_VERSION:-1.27.1}
     restart: unless-stopped
     ports:
       - "9999:9999"
@@ -80,6 +82,10 @@ services:
       context: .
       dockerfile: Dockerfile
       target: dashboard-runtime
+      args:
+        GO_VERSION: ${GO_VERSION:-1.27.1}
+        NODE_VERSION: ${NODE_VERSION:-26}
+        PNPM_VERSION: ${PNPM_VERSION:-12}
     restart: unless-stopped
     environment:
       - PORT=3000

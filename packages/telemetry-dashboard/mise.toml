@@ -6,7 +6,7 @@ pnpm = "12"
 description = "Generate the OpenAPI spec and sdk"
 run = [
   "cd ../telemetry-api && mise run generate:openapi",
-  "bun ./tools/generate-openapi.ts",
+  "tsx tools/generate-openapi.ts",
 ]
 sources = ["../telemetry-api/doc/openapi.yaml"]
 outputs = ["app/lib/telemetry-sdk/**"]
