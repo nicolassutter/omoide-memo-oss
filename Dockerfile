@@ -12,7 +12,7 @@ ENV PATH="/mise/shims:${PATH}"
 FROM mise-base AS api-builder
 WORKDIR /src/packages/telemetry-api
 COPY packages/telemetry-api/mise.toml packages/telemetry-api/go.mod packages/telemetry-api/go.sum ./
-RUN mise trust && mise install
+RUN mise trust && mise install go
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
     go mod download
